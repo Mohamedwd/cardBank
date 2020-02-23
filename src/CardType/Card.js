@@ -91,7 +91,7 @@ const Card = props => {
             </div>
             <div className="BankCardDetails">
                 <p>{finalCardNumber}</p>
-                <p>{holderName}</p>
+                <p>{holderName.toUpperCase()}</p>
             </div>
         </div>
     );

@@ -10,13 +10,13 @@ import makeAnimated from 'react-select/animated';
 
 class App extends Component{
   state = {
-      cardNumber: null,
-      expiryDate: null,
-      cvv: null,
-      holderName: null,
+      cardNumber: '',
+      expiryDate: '',
+      cvv: '',
+      holderName: '',
       cardDetails: {
-        type: null,
-        number: null
+        type: '',
+        number: ''
       },
       allowedCards: [],
       options :[
@@ -27,7 +27,9 @@ class App extends Component{
     selectedCards: [],
     animatedComponents : makeAnimated(),
     isDisabled: true,
-    isAllowed: false
+    isAllowed: false,
+    src: '',
+    alt: ''
    }
 
   changeCardDetailsHandler = e => {
@@ -72,12 +74,29 @@ class App extends Component{
 
   handleChange = selectedOption => {
     let selectedCards = this.state.selectedCards;
-    let isDisabled = this.state.isDisabled;
+    let {isDisabled, cardNumber, holderName, cvv, expiryDate} = this.state;
+    let type = this.state.cardDetails.type;
     selectedCards = selectedOption;
-    isDisabled = selectedOption === null ? true : false;
+    if(selectedCards === null){
+      isDisabled = true;
+      type = null;
+      cardNumber = '';
+      holderName = '';
+      cvv = '';
+      expiryDate = '';
+    }else
+      isDisabled = false;
+
     this.setState({
       selectedCards,
-      isDisabled
+      cardNumber,
+      holderName,
+      cvv,
+      expiryDate,
+      isDisabled,
+      cardDetails: {
+        type
+      }
     });
   };
   render(){
@@ -128,7 +147,8 @@ class App extends Component{
               placeholder="Card Number"
               maxLength={this.state.cardDetails.number}
               name="cardNumber"
-              disabled={this.state.isDisabled}/>
+              disabled={this.state.isDisabled}
+              value={this.state.cardNumber}/>
           </div>
           <div className="cardValid">
             <input 
@@ -137,7 +157,9 @@ class App extends Component{
               placeholder="MM/YY"
               maxLength="5"
               name="expiryDate"
-              onChange={ e => this.changeCardDetailsHandler(e)}/>
+              onChange={ e => this.changeCardDetailsHandler(e)}
+              disabled={this.state.isDisabled}
+              value={this.state.expiryDate}/>
 
             <input 
               type="text"
@@ -145,7 +167,9 @@ class App extends Component{
               placeholder="CVV" 
               maxLength="3" 
               name="cvv"
-              onChange={ e => this.changeCardDetailsHandler(e)} />
+              onChange={ e => this.changeCardDetailsHandler(e)} 
+              disabled={this.state.isDisabled}
+              value={this.state.cvv}/>
           </div>
           <div className="holderName">
             <input 
@@ -153,11 +177,13 @@ class App extends Component{
               className={cssClass} 
               placeholder="Card Holder Name" 
               name="holderName"
-              onChange={ e => this.changeCardDetailsHandler(e)}  />
+              onChange={ e => this.changeCardDetailsHandler(e)} 
+              disabled={this.state.isDisabled}
+              value={this.state.holderName} />
           </div>
         </div>
         <div className="submitForm">
-          <button disabled={!this.state.isAllowed}>Submit</button>
+          <button disabled={!this.state.isAllowed || this.state.isDisabled}>Submit</button>
         </div>
       </div>
     );
